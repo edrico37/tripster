@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!-- Basic Page Needs -->
+	<meta charset="utf-8">
+	<title>Tripster</title>
+	<meta name="description" content="A simple and fun way to plan trips with friends!">
+	<meta name="author" content="Dylan Hughes">
+
+	<!-- Mobile Specific Metas -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<!-- CSS -->
+	<link rel="stylesheet" href="css/base.css">
+	<link rel="stylesheet" href="css/skeleton.css">
+	<link rel="stylesheet" href="css/layout.css">
+
+	<!-- Favicons -->
+	<link rel="shortcut icon" href="images/favicon.ico">
+	<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+
+    <!-- JavaScript -->
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCy_P2rwwaE7eT67DucxVaacdEh0Xr_iYA&sensor=false"></script>
+    <script type="text/javascript">
+        var bigMap;
+        var suggestionMarkers = {};
+        function init(){
+            var mapOptions = {
+                center: new google.maps.LatLng(40.7654, -73.9142),
+                zoom: 13,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            bigMap = new google.maps.Map(document.getElementById('big-map'), mapOptions);
+
+            $('#suggestion-list').on('mouseenter mouseleave', '.suggestion', function(event){
+                var $suggestion = $(this);
+                    suggestionId = $suggestion.data('id'),
+                    suggestionMarker = suggestionMarkers[suggestionId];
+                
+                if(event.type === 'mouseenter'){
+                    if(!suggestionMarker){
+                        // need to create the marker
+                        console.log('need to create marker');
+                        suggestionMarker = new google.maps.Marker({
+                            position: new google.maps.LatLng($suggestion.data('lat'), $suggestion.data('lng')),
+                            map: bigMap
+                        });
+                        // cache it
+                        suggestionMarkers[suggestionId] = suggestionMarker;
+                    } else{
+                        // marker already in cache, just drop it on map again
+                        console.log('already have marker');
+                        suggestionMarker.setMap(bigMap);
+                    }
+                } else{
+                    // remove marker from map
+                    if(suggestionMarker){
+                        console.log('removing marker from map');
+                        suggestionMarker.setMap(null);
+                    }
+                }
+            });
+        }
+        function dropMarker(lat, lng){
+            var marker = new google.maps.Marker({
+                position: new google.maps.LatLng(lat, lng),
+                map: bigMap
+            });
+        }
+        $(document).ready(function(){
+            init();
+        });
+
+    </script>
+
+</head>
+<body>
+	<!-- Primary Page Layout -->
+	<div class="container">
+		<div class="sixteen columns">
+			<h1 class="remove-bottom" style="margin-top: 40px">Tripster</h1>
+			<h5>Version 0.0</h5>
+			<hr/>
+		</div>
+		<div class="two-thirds column">
+			<h3>Trip Map</h3>
+            <div id="big-map"></div>
+		</div>
+		<div class="one-third column">
+			<h3>Suggestion List</h3>
+            <div id="suggestion-list">
+                <div class="suggestion" data-id="100" data-lat="40.76548383013281" data-lng="-73.91906686259051">
+                    <div class="content">
+                        <div class="details">
+                            <a href="#" class="title">Sweet Afton</a>
+                            <p>This could be a fun place to end our night. Great beer and snack selection, relaxed vibe</p>
+                        </div>
+                        <div class="photo"></div>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="tools">
+                        <div class="headshot"></div>
+                        <ul>
+                            <li><input type="button" value="Add to Trip"/></li>
+                            <li><input type="button" value="Like"/></li>
+                        </ul>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+                <div class="suggestion" data-id="101" data-lat="40.74562472803153" data-lng="-73.94770682166045">
+                    <div class="content">
+                        <div class="details">
+                            <a href="#" class="title">MoMA PS1</a>
+                            <p>has a really cool outdoor music thing every week. We should check it out.</p>
+                        </div>
+                        <div class="photo"></div>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="tools">
+                        <div class="headshot"></div>
+                        <ul>
+                            <li><input type="button" value="Add to Trip"/></li>
+                            <li><input type="button" value="Like"/></li>
+                        </ul>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+                <div class="suggestion" data-id="103" data-lat="40.762996" data-lng="-73.92097966666667">
+                    <div class="content">
+                        <div class="details">
+                            <a href="#" class="title">Il Bambino</a>
+                            <p>How about this place for dinner? Pretty cheap and food sounds excellent.</p>
+                        </div>
+                        <div class="photo"></div>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="tools">
+                        <div class="headshot"></div>
+                        <ul>
+                            <li><input type="button" value="Add to Trip"/></li>
+                            <li><input type="button" value="Like"/></li>
+                        </ul>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+            </div>
+		</div>
+	</div>
+</body>
+</html>
